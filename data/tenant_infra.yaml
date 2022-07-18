@@ -1,0 +1,32 @@
+---
+apic:
+  tenants:
+    - name: infra
+
+      l3outs:
+        - name: IPN
+          vrf: overlay-1
+          domain: all-tenant-vrfs
+          ospf:
+            area: backbone
+            policy: external-isn-switches
+          nodes:
+            - node_id: 201
+              router_id: 201.201.201.201
+              interfaces:
+                - port: 32
+                  ip: 11.11.201.1/24
+                  vlan: 4
+            - node_id: 202
+              router_id: 202.202.202.202
+              interfaces:
+                - port: 32
+                  ip: 11.11.202.1/24
+                  vlan: 4
+          external_endpoint_groups:
+            - name: ALL
+
+      policies:
+        ospf_interface_policies:
+          - name: ospf-p2p
+            network_type: p2p

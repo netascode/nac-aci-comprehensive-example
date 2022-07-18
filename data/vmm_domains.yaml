@@ -1,0 +1,22 @@
+---
+apic:
+  fabric_policies:
+    vmware_vmm_domains:
+    - name: vds1-managed
+      access_mode: read-write
+      tag_collection: true
+      vlan_pool: all-vlans
+      vswitch:
+        cdp_policy: system-cdp-enabled
+        lldp_policy: system-lldp-enabled
+        port_channel_policy: system-mac-pinning
+      credential_policies:
+        - name: credentials
+          username: administrator@vsphere.local
+          password: C1sco123
+      vcenters:
+        - name: vcenter1
+          hostname_ip: 10.10.10.10
+          datacenter: DC
+          credential_policy: credentials
+          dvs_version: 6.5

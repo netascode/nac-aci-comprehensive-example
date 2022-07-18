@@ -1,0 +1,8 @@
+---
+apic:
+  pod_policies:
+    pods:
+      - id: 1
+        data_plane_tep: 1.2.3.4
+        policy: pod-policies
+

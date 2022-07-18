@@ -1,0 +1,49 @@
+---
+apic:
+  tenants:
+    - name: mgmt
+
+      inb_endpoint_groups:
+        - name: inb
+          vlan: 3966
+          bridge_domain: inb
+          contracts:
+            providers:
+              - permit-to-inb
+
+      oob_endpoint_groups:
+        - name: oob
+          oob_contracts:
+            providers:
+              - permit-to-oob
+
+      ext_mgmt_instances:
+        - name: ext
+          subnets:
+            - 0.0.0.0/0
+          oob_contracts:
+            consumers:
+              - permit-to-oob
+
+      filters:
+        - name: tcp-src-any-to-dst-443
+          entries:
+            - name: src-any-to-dst-443
+              ethertype: ip
+              protocol: tcp
+              destination_from_port: 443
+              destination_to_port: 443
+
+      contracts:
+        - name: permit-to-inb
+          subjects:
+            - name: tcp-entries
+              filters:
+                - filter: tcp-src-any-to-dst-443
+
+      oob_contracts:
+        - name: permit-to-oob
+          subjects:
+            - name: tcp-entries
+              filters:
+                - filter: tcp-src-any-to-dst-443

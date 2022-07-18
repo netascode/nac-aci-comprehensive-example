@@ -1,0 +1,104 @@
+---
+apic:
+  tenants:
+    - name: prod
+
+      vrfs:
+        - name: prod.prod-vrf
+
+      bridge_domains:
+        - name: 10.1.100.0_24
+          vrf: prod.prod-vrf
+          subnets: 
+          - ip: 10.1.100.1/24     
+
+        - name: 10.1.101.0_24
+          vrf: prod.prod-vrf
+          subnets: 
+          - ip: 10.1.101.1/24  
+
+        - name: 10.1.102.0_24
+          vrf: prod.prod-vrf
+          subnets: 
+          - ip: 10.1.102.1/24  
+
+        - name: 10.1.103.0_24
+          vrf: prod.prod-vrf
+          subnets: 
+          - ip: 10.1.103.1/24    
+
+      application_profiles:
+        - name: vlans
+          endpoint_groups:
+            - name: vlan100
+              bridge_domain: 10.1.100.0_24
+              physical_domains:
+                - all-physical-devices
+              static_ports:
+                - node_id: 101
+                  port: 1
+                  vlan: 100
+              contracts:
+                consumers:
+                  - permit-to-vlan-101
+
+            - name: vlan101
+              bridge_domain: 10.1.101.0_24
+              physical_domains:
+                - all-physical-devices
+              static_ports:
+                - node_id: 101
+                  port: 1
+                  vlan: 101
+              contracts:
+                providers:
+                  - permit-to-vlan-101
+
+            - name: vlan102
+              bridge_domain: 10.1.102.0_24
+              physical_domains:
+                - all-physical-devices
+              static_ports:
+                - node_id: 101
+                  port: 1
+                  vlan: 102
+
+      filters:
+        - name: tcp-src-any-to-dst-80
+          entries:
+            - name: src-any-to-dst-80
+              destination_from_port: 80
+              destination_to_port: 80
+        - name: tcp-src-any-to-dst-443
+          entries:
+            - name: src-any-to-dst-443
+              destination_from_port: 443
+              destination_to_port: 443
+
+      contracts:
+        - name: permit-to-vlan-101
+          subjects:
+            - name: tcp-entries
+              filters:
+                - filter: tcp-src-any-to-dst-80
+                - filter: tcp-src-any-to-dst-443
+
+      l3outs:
+        - name: l3out-to-external-router-1
+          vrf: prod.prod-vrf
+          domain: all-tenant-vrfs
+          ospf:
+            area: 0.0.0.0
+            area_type: regular
+            area_cost: 1
+          nodes:
+            - node_id: 101
+              router_id: 101.101.101.101
+              router_id_as_loopback: true
+              interfaces:
+                - channel: n7000-a
+                  svi: true
+                  vlan: 201
+                  ip_a: 172.16.101.1/24
+                  ip_b: 172.16.101.2/24
+                  ip_shared: 172.16.101.3/24

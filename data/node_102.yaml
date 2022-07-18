@@ -1,0 +1,22 @@
+---
+apic:
+  interface_policies:
+    nodes:
+      - id: 102
+        interfaces:
+          - port: 1
+            policy_group: linux-servers
+          - port: 2
+            policy_group: linux-servers
+          - port: 3
+            policy_group: hx-prod-fi-b
+          - port: 4
+            policy_group: hx-prod-fi-b
+          - port: 5
+            policy_group: n7000-a
+          - port: 6
+            policy_group: n7000-b
+          - port: 7
+            policy_group: core-routers
+          - port: 8
+            policy_group: firewalls

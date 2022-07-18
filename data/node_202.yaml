@@ -1,0 +1,8 @@
+---
+apic:
+  interface_policies:
+    nodes:
+      - id: 202
+        interfaces:
+          - port: 32
+            policy_group: external-isn-switches

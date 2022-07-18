@@ -1,0 +1,168 @@
+---
+apic:
+  access_policies:
+    infra_vlan: 3967
+
+    mcp:
+      key: $3cR3t_K3y
+
+    vlan_pools:
+      - name: all-vlans
+        allocation: dynamic
+        ranges:
+          - from: 100
+            to: 200
+            allocation: static
+          - from : 201
+            to: 201
+            description: "L3 peering to external router 1"
+            allocation: static
+          - from : 202
+            to: 202
+            description: "L3 peering to external router 2"
+            allocation: static
+          - from: 1000
+            to: 1200
+            allocation: inherit
+
+
+    physical_domains:
+      - name: all-physical-devices
+        vlan_pool: all-vlans
+
+    routed_domains:
+      - name: all-tenant-vrfs
+        vlan_pool: all-vlans
+
+    aaeps:
+      - name: allow-all-vlans
+        physical_domains:
+          - all-physical-devices
+        routed_domains:
+          - all-tenant-vrfs
+        vmware_vmm_domains:
+          - vds1-dynamic-vlans
+
+    interface_policies:
+      cdp_policies:
+        - name: system-cdp-enabled
+          admin_state: true
+        - name: system-cdp-disabled
+          admin_state: false
+      lldp_policies:
+        - name: system-lldp-enabled
+          admin_rx_state: true
+          admin_tx_state: true
+        - name: system-lldp-disabled
+          admin_rx_state: false
+          admin_tx_state: false
+      link_level_policies:
+        - name: system-link-level-1G-auto
+          speed: 1G
+          auto: true
+          fec_mode: inherit
+        - name: system-link-level-10G-auto
+          speed: 10G
+          auto: true
+          fec_mode: inherit
+        - name: system-link-level-100G-auto
+          speed: 100G
+          auto: true
+          fec_mode: inherit
+      port_channel_policies:
+        - name: system-lacp-active
+          mode: active
+        - name: system-mac-pinning
+          mode: mac-pin
+      port_channel_member_policies:
+        - name: normal
+          rate: normal
+          priority: 32768
+        - name: fast
+          rate: fast
+          priority: 32768
+      spanning_tree_policies:
+        - name: bpdu-filter
+          bpdu_filter: true
+        - name: bpdu-guard
+          bpdu_guard: true
+      mcp_policies:
+        - name: mcp-enabled
+          admin_state: true
+        - name: mcp-disabled
+          admin_state: false
+
+    spine_interface_policy_groups:
+      - name: external-isn-switches
+        link_level_policy: system-link-level-10G-auto
+        cdp_policy: system-cdp-enabled
+        aaep: allow-all-vlans
+
+    switch_policies:
+      forwarding_scale_policies:
+        - name: high-dual-stack
+          profile: high-dual-stack
+        - name: dual-stack
+          profile: dual-stack
+
+    leaf_switch_policy_groups:
+      - name: all-leafs
+        forwarding_scale_policy: dual-stack
+
+    leaf_interface_policy_groups:
+      - name: core-routers
+        type: access
+        link_level_policy: system-link-level-1G-auto
+        cdp_policy: system-cdp-enabled
+        spanning_tree_policy: bpdu-filter
+        mcp_policy: mcp-enabled
+
+      - name: firewalls
+        type: access
+        link_level_policy: system-link-level-10G-auto
+        cdp_policy: system-cdp-enabled
+        spanning_tree_policy: bpdu-filter
+        mcp_policy: mcp-enabled
+
+      - name: linux-servers
+        type: access
+        link_level_policy: system-link-level-10G-auto
+        cdp_policy: system-cdp-enabled
+        spanning_tree_policy: bpdu-filter
+        mcp_policy: mcp-enabled
+
+      - name: hx-prod-fi-a
+        type: pc
+        link_level_policy: system-link-level-10G-auto
+        cdp_policy: system-cdp-enabled
+        lldp_policy: system-lldp-enabled
+        port_channel_policy: system-lacp-active
+        spanning_tree_policy: bpdu-filter
+        mcp_policy: mcp-enabled
+
+      - name: hx-prod-fi-b
+        type: pc
+        link_level_policy: system-link-level-10G-auto
+        cdp_policy: system-cdp-enabled
+        lldp_policy: system-lldp-enabled
+        port_channel_policy: system-lacp-active
+        spanning_tree_policy: bpdu-filter
+        mcp_policy: mcp-enabled
+
+      - name: n7000-a
+        type: vpc
+        link_level_policy: system-link-level-10G-auto
+        cdp_policy: system-cdp-enabled
+        lldp_policy: system-lldp-enabled
+        port_channel_policy: system-lacp-active
+        spanning_tree_policy: bpdu-filter
+        mcp_policy: mcp-enabled
+
+      - name: n7000-b
+        type: vpc
+        link_level_policy: system-link-level-10G-auto
+        cdp_policy: system-cdp-enabled
+        lldp_policy: system-lldp-enabled
+        port_channel_policy: system-lacp-active
+        spanning_tree_policy: bpdu-filter
+        mcp_policy: mcp-enabled

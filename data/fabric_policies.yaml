@@ -1,0 +1,87 @@
+---
+apic:
+  fabric_policies:
+    fabric_bgp_as: 65010
+
+    fabric_bgp_rr:
+      - 201
+      - 202
+
+    aaa:
+      tacacs_providers:
+        - hostname_ip: 1.1.1.1
+          key: '123'
+          mgmt_epg: oob
+
+      login_domains:
+        - name: tacacs
+          realm: tacacs
+          tacacs_providers:
+            - hostname_ip: 1.1.1.1
+        - name: local
+          realm: local
+
+    remote_locations:
+      - name: external-backup
+        hostname_ip: 1.2.3.4
+        protocol: scp
+        path: '/path'
+        port: 22
+        username: cisco
+        password: cisco
+
+    schedulers:
+      - name: every-twenty-four-hours
+        recurring_windows:
+          - name: midnight
+            day: Monday
+            hour: 0
+            minute: 0
+
+    config_exports:
+      - name: daily-backup
+        remote_location: external-backup
+        scheduler: every-twenty-four-hours
+
+    monitoring:
+      snmp_traps:
+        - name: trap1
+          destinations:
+            - hostname_ip: 2.2.2.2
+              community: test
+      syslogs:
+        - name: syslog1
+          destinations:
+            - hostname_ip: 2.2.2.2
+
+    pod_policies:
+      date_time_policies:
+        - name: ntp-servers
+          ntp_admin_state: true
+          ntp_servers:
+            - hostname_ip: 1.1.1.13
+            - hostname_ip: 1.1.1.14
+      snmp_policies:
+        - name: snmp-trap-destinations
+          communities:
+            - abcABC123
+
+    pod_policy_groups:
+      - name: pod-policies
+        date_time_policy: ntp-servers
+        snmp_policy: snmp-trap-destinations
+
+    switch_policies:
+      node_control_policies:
+        - name: flow-monitoring-type-netflow
+          telemetry: netflow
+        - name: flow-monitoring-type-analytics
+          telemetry: analytics
+
+    leaf_switch_policy_groups:
+      - name: all-leafs
+        node_control_policy: flow-monitoring-type-netflow
+
+    spine_switch_policy_groups:
+      - name: all-spines
+        node_control_policy: flow-monitoring-type-netflow
