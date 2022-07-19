@@ -6,17 +6,17 @@ terraform {
     }
     utils = {
       source  = "netascode/utils"
-      version = ">= 0.1.1"
+      version = ">= 0.1.2"
     }
   }
 }
 
 provider "aci" {
-  username    = "admin"
-  password    = "password"
-  url         = "https://apicurl"
-  insecure    = true
-  retries     = 4
+  username = "admin"
+  password = "password"
+  url      = "https://apicurl"
+  insecure = true
+  retries  = 4
 }
 
 locals {
