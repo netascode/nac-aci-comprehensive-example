@@ -102,6 +102,7 @@ modules:
   aci_dhcp_option_policy: true
   aci_dhcp_relay_policy: true
   aci_endpoint_group: true
+  aci_endpoint_security_group: true
   aci_external_endpoint_group: true
   aci_filter: true
   aci_imported_contract: true

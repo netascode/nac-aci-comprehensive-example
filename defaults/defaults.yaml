@@ -456,7 +456,7 @@ defaults:
             congestion_algorithm: tail-drop
             minimum_buffer: 0
             pfc_state: false
-            no_drop_cos: unspecified
+            no_drop_cos: ''
             pfc_scope: tor
             ecn: false
             forward_non_ecn: false
@@ -472,7 +472,7 @@ defaults:
             congestion_algorithm: tail-drop
             minimum_buffer: 0
             pfc_state: false
-            no_drop_cos: unspecified
+            no_drop_cos: ''
             pfc_scope: tor
             ecn: false
             forward_non_ecn: false
@@ -488,7 +488,7 @@ defaults:
             congestion_algorithm: tail-drop
             minimum_buffer: 0
             pfc_state: false
-            no_drop_cos: unspecified
+            no_drop_cos: ''
             pfc_scope: tor
             ecn: false
             forward_non_ecn: false
@@ -504,7 +504,7 @@ defaults:
             congestion_algorithm: tail-drop
             minimum_buffer: 0
             pfc_state: false
-            no_drop_cos: unspecified
+            no_drop_cos: ''
             pfc_scope: tor
             ecn: false
             forward_non_ecn: false
@@ -520,7 +520,7 @@ defaults:
             congestion_algorithm: tail-drop
             minimum_buffer: 0
             pfc_state: false
-            no_drop_cos: unspecified
+            no_drop_cos: ''
             pfc_scope: tor
             ecn: false
             forward_non_ecn: false
@@ -536,7 +536,7 @@ defaults:
             congestion_algorithm: tail-drop
             minimum_buffer: 0
             pfc_state: false
-            no_drop_cos: unspecified
+            no_drop_cos: ''
             pfc_scope: tor
             ecn: false
             forward_non_ecn: false
@@ -855,6 +855,13 @@ defaults:
               name_suffix: ''
               start_ip: 0.0.0.0
               end_ip: 0.0.0.0
+        endpoint_security_groups:
+          name_suffix: ''
+          shutdown: false
+          intra_esg_isolation: false
+          preferred_group: false
+          tag_selectors:
+            operator: equals
       inb_endpoint_groups:
         name_suffix: ''
       oob_endpoint_groups:
