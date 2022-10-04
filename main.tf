@@ -70,7 +70,7 @@ module "interface_policies" {
 
 module "tenant" {
   source  = "netascode/nac-tenant/aci"
-  version = ">= 0.2.1"
+  version = ">= 0.2.2"
 
   for_each    = toset([for tenant in lookup(local.model.apic, "tenants", {}) : tenant.name])
   model       = local.model

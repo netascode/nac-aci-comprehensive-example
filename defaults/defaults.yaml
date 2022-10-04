@@ -783,7 +783,7 @@ defaults:
                 as_propagate: none
         external_endpoint_groups:
           name_suffix: ''
-          preferred_group: exclude
+          preferred_group: false
           qos_class: unspecified
           target_dscp: unspecified
           subnets:
@@ -819,8 +819,8 @@ defaults:
         endpoint_groups:
           name_suffix: ''
           flood_in_encap: false
-          intra_epg_isolation: unenforced
-          preferred_group: exclude
+          intra_epg_isolation: false
+          preferred_group: false
           qos_class: unspecified
           vmware_vmm_domains:
             name_suffix: ''
@@ -1108,7 +1108,7 @@ defaults:
             ip_2: '0.0.0.0'
         service_epg_policies:
           name_suffix: ''
-          preferred_group: exclude
+          preferred_group: false
         redirect_health_groups:
           name_suffix: ''
         service_graph_templates:
