@@ -50,7 +50,7 @@ module "pod_policies" {
 
 module "node_policies" {
   source  = "netascode/nac-node-policies/aci"
-  version = "0.3.0"
+  version = "0.3.1"
 
   model = local.model
 
@@ -59,7 +59,7 @@ module "node_policies" {
 
 module "interface_policies" {
   source  = "netascode/nac-interface-policies/aci"
-  version = "0.3.0"
+  version = "0.3.1"
 
   for_each = { for node in lookup(lookup(local.model.apic, "interface_policies", {}), "nodes", []) : node.id => node }
   model    = local.model
@@ -70,7 +70,7 @@ module "interface_policies" {
 
 module "tenant" {
   source  = "netascode/nac-tenant/aci"
-  version = "0.3.0"
+  version = "0.3.1"
 
   for_each    = toset([for tenant in lookup(local.model.apic, "tenants", {}) : tenant.name])
   model       = local.model
