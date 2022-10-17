@@ -31,8 +31,8 @@ apic:
             - name: src-any-to-dst-443
               ethertype: ip
               protocol: tcp
-              destination_from_port: 443
-              destination_to_port: 443
+              destination_from_port: https
+              destination_to_port: https
 
       contracts:
         - name: permit-to-inb
