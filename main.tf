@@ -2,21 +2,19 @@ terraform {
   required_providers {
     aci = {
       source  = "CiscoDevNet/aci"
-      version = ">= 2.1.0"
+      version = ">= 2.5.2"
     }
     utils = {
       source  = "netascode/utils"
-      version = ">= 0.1.2"
+      version = ">= 0.2.2"
     }
   }
 }
 
 provider "aci" {
-  username = "admin"
+  username = "username"
   password = "password"
-  url      = "https://apicurl"
-  insecure = true
-  retries  = 4
+  url      = "https://apic.url"
 }
 
 locals {
@@ -29,14 +27,14 @@ data "utils_yaml_merge" "model" {
 
 module "access_policies" {
   source  = "netascode/nac-access-policies/aci"
-  version = "0.3.0"
+  version = "0.3.2"
 
   model = local.model
 }
 
 module "fabric_policies" {
   source  = "netascode/nac-fabric-policies/aci"
-  version = "0.3.0"
+  version = "0.3.4"
 
   model = local.model
 }
@@ -50,7 +48,7 @@ module "pod_policies" {
 
 module "node_policies" {
   source  = "netascode/nac-node-policies/aci"
-  version = "0.3.1"
+  version = "0.3.2"
 
   model = local.model
 
@@ -59,7 +57,7 @@ module "node_policies" {
 
 module "interface_policies" {
   source  = "netascode/nac-interface-policies/aci"
-  version = "0.3.1"
+  version = "0.3.2"
 
   for_each = { for node in lookup(lookup(local.model.apic, "interface_policies", {}), "nodes", []) : node.id => node }
   model    = local.model
@@ -70,7 +68,7 @@ module "interface_policies" {
 
 module "tenant" {
   source  = "netascode/nac-tenant/aci"
-  version = "0.3.1"
+  version = "0.3.3"
 
   for_each    = toset([for tenant in lookup(local.model.apic, "tenants", {}) : tenant.name])
   model       = local.model

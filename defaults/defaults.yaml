@@ -1,5 +1,19 @@
 ---
 defaults:
+  aci:
+    apic_delete_mode: aac
+    apic_use_proxy: no
+    apic_validate_certs: no
+    apic_option_render: True
+    apic_option_configure: True
+    apic_option_delete: False
+    ignore_annotations:
+      - orchestrator:msc
+  nae:
+    nae_port: 443
+    nae_ignore_smart_events:
+      - APP_EPG_NOT_DEPLOYED
+      - APP_EPG_HAS_NO_CONTRACT_IN_ENFORCED_VRF
   apic:
     auto_generate_switch_pod_profiles: false
     auto_generate_pod_profiles: false
@@ -608,11 +622,14 @@ defaults:
             from_module: 1
 
     tenants:
+      managed: true
       vrfs:
         name_suffix: ''
         data_plane_learning: true
         enforcement_direction: ingress
         enforcement_preference: enforced
+        leaked_internal_prefixes:
+          public: false
         pim:
           mtu: 1500
           bsr_forward_updates: false
@@ -814,6 +831,7 @@ defaults:
         l3_multicast_ipv4: false
       application_profiles:
         name_suffix: ''
+        managed: true
         endpoint_groups:
           name_suffix: ''
           flood_in_encap: false
