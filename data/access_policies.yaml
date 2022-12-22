@@ -45,34 +45,34 @@ apic:
 
     interface_policies:
       cdp_policies:
-        - name: system-cdp-enabled
+        - name: nac-cdp-enabled
           admin_state: true
-        - name: system-cdp-disabled
+        - name: nac-cdp-disabled
           admin_state: false
       lldp_policies:
-        - name: system-lldp-enabled
+        - name: nac-lldp-enabled
           admin_rx_state: true
           admin_tx_state: true
-        - name: system-lldp-disabled
+        - name: nac-lldp-disabled
           admin_rx_state: false
           admin_tx_state: false
       link_level_policies:
-        - name: system-link-level-1G-auto
+        - name: nac-link-level-1G-auto
           speed: 1G
           auto: true
           fec_mode: inherit
-        - name: system-link-level-10G-auto
+        - name: nac-link-level-10G-auto
           speed: 10G
           auto: true
           fec_mode: inherit
-        - name: system-link-level-100G-auto
+        - name: nac-link-level-100G-auto
           speed: 100G
           auto: true
           fec_mode: inherit
       port_channel_policies:
-        - name: system-lacp-active
+        - name: nac-lacp-active
           mode: active
-        - name: system-mac-pinning
+        - name: nac-mac-pinning
           mode: mac-pin
       port_channel_member_policies:
         - name: normal
@@ -94,8 +94,8 @@ apic:
 
     spine_interface_policy_groups:
       - name: external-isn-switches
-        link_level_policy: system-link-level-10G-auto
-        cdp_policy: system-cdp-enabled
+        link_level_policy: nac-link-level-10G-auto
+        cdp_policy: nac-cdp-enabled
         aaep: allow-all-vlans
 
     switch_policies:
@@ -112,57 +112,57 @@ apic:
     leaf_interface_policy_groups:
       - name: core-routers
         type: access
-        link_level_policy: system-link-level-1G-auto
-        cdp_policy: system-cdp-enabled
+        link_level_policy: nac-link-level-1G-auto
+        cdp_policy: nac-cdp-enabled
         spanning_tree_policy: bpdu-filter
         mcp_policy: mcp-enabled
 
       - name: firewalls
         type: access
-        link_level_policy: system-link-level-10G-auto
-        cdp_policy: system-cdp-enabled
+        link_level_policy: nac-link-level-10G-auto
+        cdp_policy: nac-cdp-enabled
         spanning_tree_policy: bpdu-filter
         mcp_policy: mcp-enabled
 
       - name: linux-servers
         type: access
-        link_level_policy: system-link-level-10G-auto
-        cdp_policy: system-cdp-enabled
+        link_level_policy: nac-link-level-10G-auto
+        cdp_policy: nac-cdp-enabled
         spanning_tree_policy: bpdu-filter
         mcp_policy: mcp-enabled
 
       - name: hx-prod-fi-a
         type: pc
-        link_level_policy: system-link-level-10G-auto
-        cdp_policy: system-cdp-enabled
-        lldp_policy: system-lldp-enabled
-        port_channel_policy: system-lacp-active
+        link_level_policy: nac-link-level-10G-auto
+        cdp_policy: nac-cdp-enabled
+        lldp_policy: nac-lldp-enabled
+        port_channel_policy: nac-lacp-active
         spanning_tree_policy: bpdu-filter
         mcp_policy: mcp-enabled
 
       - name: hx-prod-fi-b
         type: pc
-        link_level_policy: system-link-level-10G-auto
-        cdp_policy: system-cdp-enabled
-        lldp_policy: system-lldp-enabled
-        port_channel_policy: system-lacp-active
+        link_level_policy: nac-link-level-10G-auto
+        cdp_policy: nac-cdp-enabled
+        lldp_policy: nac-lldp-enabled
+        port_channel_policy: nac-lacp-active
         spanning_tree_policy: bpdu-filter
         mcp_policy: mcp-enabled
 
       - name: n7000-a
         type: vpc
-        link_level_policy: system-link-level-10G-auto
-        cdp_policy: system-cdp-enabled
-        lldp_policy: system-lldp-enabled
-        port_channel_policy: system-lacp-active
+        link_level_policy: nac-link-level-10G-auto
+        cdp_policy: nac-cdp-enabled
+        lldp_policy: nac-lldp-enabled
+        port_channel_policy: nac-lacp-active
         spanning_tree_policy: bpdu-filter
         mcp_policy: mcp-enabled
 
       - name: n7000-b
         type: vpc
-        link_level_policy: system-link-level-10G-auto
-        cdp_policy: system-cdp-enabled
-        lldp_policy: system-lldp-enabled
-        port_channel_policy: system-lacp-active
+        link_level_policy: nac-link-level-10G-auto
+        cdp_policy: nac-cdp-enabled
+        lldp_policy: nac-lldp-enabled
+        port_channel_policy: nac-lacp-active
         spanning_tree_policy: bpdu-filter
         mcp_policy: mcp-enabled

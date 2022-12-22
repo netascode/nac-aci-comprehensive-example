@@ -7,9 +7,9 @@ apic:
       tag_collection: true
       vlan_pool: all-vlans
       vswitch:
-        cdp_policy: system-cdp-enabled
-        lldp_policy: system-lldp-enabled
-        port_channel_policy: system-mac-pinning
+        cdp_policy: nac-cdp-enabled
+        lldp_policy: nac-lldp-enabled
+        port_channel_policy: nac-mac-pinning
       credential_policies:
         - name: credentials
           username: administrator@vsphere.local
