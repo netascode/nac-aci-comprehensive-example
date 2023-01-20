@@ -1,20 +1,7 @@
 ---
 defaults:
-  aci:
-    apic_delete_mode: aac
-    apic_use_proxy: no
-    apic_validate_certs: no
-    apic_option_render: True
-    apic_option_configure: True
-    apic_option_delete: False
-    ignore_annotations:
-      - orchestrator:msc
-  nae:
-    nae_port: 443
-    nae_ignore_smart_events:
-      - APP_EPG_NOT_DEPLOYED
-      - APP_EPG_HAS_NO_CONTRACT_IN_ENFORCED_VRF
   apic:
+    version: '5.2.1g'
     auto_generate_switch_pod_profiles: false
     auto_generate_pod_profiles: false
     auto_generate_fabric_leaf_switch_interface_profiles: false
@@ -270,6 +257,7 @@ defaults:
       config_exports:
         name_suffix: ''
         format: 'json'
+        snapshot: false
       monitoring:
         snmp_traps:
           name_suffix: ''
@@ -316,6 +304,11 @@ defaults:
             span_drop: false
             access_paths:
               module: 1
+      smart_licensing:
+        mode: 'smart-licensing'
+        url: 'https://tools.cisco.com/its/service/oddce/services/DDCEService'
+        proxy:
+          port: '443'
 
     access_policies:
       leaf_switch_profile_name: "LEAF\\g<id>"
@@ -400,6 +393,7 @@ defaults:
           name_suffix: ''
           vlan_scope: global
           qinq: disabled
+          reflective_relay: false
         mcp_policies:
           name_suffix: ''
         storm_control_policies:
@@ -638,15 +632,16 @@ defaults:
           auto_rp_listen_updates: false
           fast_convergence: false
           strict_rfc: false
-          max_multicast_entries: 4294967295
+          max_multicast_entries: unlimited
           reserved_multicast_entries: undefined
-          asm_sg_expiry: 180
+          asm_sg_expiry: default-timeout
           asm_traffic_registry_max_rate: 65535
           asm_traffic_registry_source_ip: '0.0.0.0'
         preferred_group: false
       bridge_domains:
         name_suffix: ''
         mac: 00:22:BD:F8:19:FF
+        ep_move_detection: false
         arp_flooding: true
         ip_dataplane_learning: true
         limit_ip_learn_to_subnets: true
@@ -933,7 +928,7 @@ defaults:
           lsa_transmit_delay: 1
         bgp_best_path_policies:
           name_suffix: ''
-          control_type: 'default'
+          control_type: ''
         bgp_timer_policies:
           name_suffix: ''
           keepalive_interval: 60
@@ -1014,7 +1009,7 @@ defaults:
           querier: false
         multicast_route_maps:
           name_suffix: ''
-          multicast_route_map_entries:
+          entries:
             source_ip: '0.0.0.0'
             group_ip: '0.0.0.0'
             rp_ip: '0.0.0.0'
@@ -1044,8 +1039,8 @@ defaults:
           startup_query_count: 2
           startup_query_interval: 31
           version: 'v2'
-          max_mcast_entries: 4294967295
-          reserved_mcast_entries: 0
+          max_mcast_entries: unlimited
+          reserved_mcast_entries: undefined
         qos:
           name_suffix: ''
           dscp_priority_maps:
