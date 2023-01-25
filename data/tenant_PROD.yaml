@@ -88,7 +88,7 @@ apic:
           vrf: prod.prod-vrf
           domain: all-tenant-vrfs
           ospf:
-            area: 0.0.0.0
+            area: backbone
             area_type: regular
             area_cost: 1
           nodes:

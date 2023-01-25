@@ -2,11 +2,7 @@ terraform {
   required_providers {
     aci = {
       source  = "CiscoDevNet/aci"
-      version = ">= 2.5.2"
-    }
-    utils = {
-      source  = "netascode/utils"
-      version = ">= 0.2.2"
+      version = ">= 2.6.0"
     }
   }
 }
@@ -17,60 +13,62 @@ provider "aci" {
   url      = "https://apic.url"
 }
 
-locals {
-  model = yamldecode(data.utils_yaml_merge.model.output)
-}
+module "merge" {
+  source  = "netascode/nac-merge/utils"
+  version = "0.1.2"
 
-data "utils_yaml_merge" "model" {
-  input = concat([for file in fileset(path.module, "data/*.yaml") : file(file)], [file("${path.module}/defaults/defaults.yaml"), file("${path.module}/modules/modules.yaml")])
+  yaml_strings = concat(
+    [for file in fileset(path.module, "data/*.yaml") : file(file)],
+    [file("${path.module}/defaults/defaults.yaml")],
+  )
 }
 
 module "access_policies" {
   source  = "netascode/nac-access-policies/aci"
-  version = "0.3.2"
+  version = "0.4.0"
 
-  model = local.model
+  model = module.merge.model
 }
 
 module "fabric_policies" {
   source  = "netascode/nac-fabric-policies/aci"
-  version = "0.3.4"
+  version = "0.4.1"
 
-  model = local.model
+  model = module.merge.model
 }
 
 module "pod_policies" {
   source  = "netascode/nac-pod-policies/aci"
-  version = "0.3.0"
+  version = "0.4.0"
 
-  model = local.model
+  model = module.merge.model
 }
 
 module "node_policies" {
   source  = "netascode/nac-node-policies/aci"
-  version = "0.3.2"
+  version = "0.4.0"
 
-  model = local.model
+  model = module.merge.model
 
-  depends_on = [module.access_policies]
+  dependencies = [module.access_policies.critical_resources_done]
 }
 
 module "interface_policies" {
   source  = "netascode/nac-interface-policies/aci"
-  version = "0.3.2"
+  version = "0.4.0"
 
-  for_each = { for node in lookup(lookup(local.model.apic, "interface_policies", {}), "nodes", []) : node.id => node }
-  model    = local.model
+  for_each = { for node in try(module.merge.model.apic.interface_policies.nodes, []) : node.id => node }
+  model    = module.merge.model
   node_id  = each.value.id
 
-  depends_on = [module.access_policies]
+  dependencies = [module.access_policies.critical_resources_done]
 }
 
 module "tenant" {
   source  = "netascode/nac-tenant/aci"
-  version = "0.3.3"
+  version = "0.4.1"
 
-  for_each    = toset([for tenant in lookup(local.model.apic, "tenants", {}) : tenant.name])
-  model       = local.model
-  tenant_name = each.value
+  for_each    = { for tenant in try(module.merge.model.apic.tenants, []) : tenant.name => tenant }
+  model       = module.merge.model
+  tenant_name = each.value.name
 }
