@@ -25,14 +25,14 @@ module "merge" {
 
 module "access_policies" {
   source  = "netascode/nac-access-policies/aci"
-  version = "0.4.0"
+  version = "0.4.1"
 
   model = module.merge.model
 }
 
 module "fabric_policies" {
   source  = "netascode/nac-fabric-policies/aci"
-  version = "0.4.1"
+  version = "0.4.2"
 
   model = module.merge.model
 }
@@ -66,9 +66,14 @@ module "interface_policies" {
 
 module "tenant" {
   source  = "netascode/nac-tenant/aci"
-  version = "0.4.1"
+  version = "0.4.2"
 
   for_each    = { for tenant in try(module.merge.model.apic.tenants, []) : tenant.name => tenant }
   model       = module.merge.model
   tenant_name = each.value.name
+
+  dependencies = [
+    module.access_policies.critical_resources_done,
+    module.fabric_policies.critical_resources_done,
+  ]
 }
