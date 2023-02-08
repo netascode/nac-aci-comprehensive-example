@@ -11,46 +11,46 @@ apic:
     vpc_groups:
       mode: explicit
       groups:
-        - id: 101
-          switch_1: 101
-          switch_2: 102
+        - id: 401
+          switch_1: 1101
+          switch_2: 1102
 
     nodes:
-      - id: 101
+      - id: 1101
         pod: 1
         role: leaf
-        serial_number: SN-1-101
-        name: leaf-101
+        serial_number: SN-1-1101
+        name: leaf-1101
         oob_address: 10.51.77.94/24
         oob_gateway: 10.51.77.254
         update_group: MG1
         fabric_policy_group: all-leafs
         access_policy_group: all-leafs
 
-      - id: 102
+      - id: 1102
         pod: 1
         role: leaf
-        serial_number: SN-1-102
-        name: leaf-102
+        serial_number: SN-1-1102
+        name: leaf-1102
         oob_address: 10.51.77.95/24
         oob_gateway: 10.51.77.254
         update_group: MG2
         fabric_policy_group: all-leafs
         access_policy_group: all-leafs
 
-      - id: 201
+      - id: 2201
         pod: 1
         role: spine
-        serial_number: SN-1-201
-        name: spine-201
+        serial_number: SN-1-2201
+        name: spine-2201
         update_group: MG1
         fabric_policy_group: all-spines
 
-      - id: 202
+      - id: 2202
         pod: 1
         role: spine
-        serial_number: SN-1-202
-        name: spine-202
+        serial_number: SN-1-2202
+        name: spine-2202
         update_group: MG1
         fabric_policy_group: all-spines
 

@@ -2,7 +2,7 @@
 apic:
   interface_policies:
     nodes:
-      - id: 101
+      - id: 1101
         interfaces:
           - port: 1
             policy_group: linux-servers
@@ -20,4 +20,3 @@ apic:
             policy_group: core-routers
           - port: 8
             policy_group: firewalls
-

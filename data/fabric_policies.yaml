@@ -4,8 +4,8 @@ apic:
     fabric_bgp_as: 65010
 
     fabric_bgp_rr:
-      - 201
-      - 202
+      - 2201
+      - 2202
 
     aaa:
       tacacs_providers:

@@ -2,7 +2,7 @@
 apic:
   interface_policies:
     nodes:
-      - id: 102
+      - id: 1102
         interfaces:
           - port: 1
             policy_group: linux-servers

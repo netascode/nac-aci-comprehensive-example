@@ -11,13 +11,13 @@ apic:
             area: backbone
             policy: external-isn-switches
           nodes:
-            - node_id: 201
+            - node_id: 2201
               router_id: 201.201.201.201
               interfaces:
                 - port: 32
                   ip: 11.11.201.1/24
                   vlan: 4
-            - node_id: 202
+            - node_id: 2202
               router_id: 202.202.202.202
               interfaces:
                 - port: 32
