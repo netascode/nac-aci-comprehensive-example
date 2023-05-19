@@ -2,7 +2,7 @@
 # Overwrite default values here
 #
 # A full reference of all default values can be found here:
-# https://github.com/netascode/terraform-utils-nac-merge/blob/main/defaults/defaults.yaml
+# https://github.com/netascode/terraform-aci-nac-aci/blob/main/defaults/defaults.yaml
 
 defaults:
   apic:
