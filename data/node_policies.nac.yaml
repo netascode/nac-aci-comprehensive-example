@@ -4,10 +4,6 @@ apic:
     inb_endpoint_group: inb
     oob_endpoint_group: oob
 
-    update_groups:
-      - name: MG1
-      - name: MG2
-
     vpc_groups:
       mode: explicit
       groups:
@@ -23,7 +19,6 @@ apic:
         name: leaf-1101
         oob_address: 10.51.77.94/24
         oob_gateway: 10.51.77.254
-        update_group: MG1
         fabric_policy_group: all-leafs
         access_policy_group: all-leafs
 
@@ -34,7 +29,6 @@ apic:
         name: leaf-1102
         oob_address: 10.51.77.95/24
         oob_gateway: 10.51.77.254
-        update_group: MG2
         fabric_policy_group: all-leafs
         access_policy_group: all-leafs
 
@@ -43,7 +37,6 @@ apic:
         role: spine
         serial_number: SN-1-2201
         name: spine-2201
-        update_group: MG1
         fabric_policy_group: all-spines
 
       - id: 2202
@@ -51,7 +44,6 @@ apic:
         role: spine
         serial_number: SN-1-2202
         name: spine-2202
-        update_group: MG1
         fabric_policy_group: all-spines
 
       - id: 1
