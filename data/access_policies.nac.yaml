@@ -13,18 +13,17 @@ apic:
           - from: 100
             to: 200
             allocation: static
-          - from : 201
+          - from: 201
             to: 201
             description: "L3 peering to external router 1"
             allocation: static
-          - from : 202
+          - from: 202
             to: 202
             description: "L3 peering to external router 2"
             allocation: static
           - from: 1000
             to: 1200
             allocation: inherit
-
 
     physical_domains:
       - name: all-physical-devices
