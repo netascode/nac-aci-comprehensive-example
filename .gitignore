@@ -422,3 +422,4 @@ tests/results/
 
 # Pabot
 .pabotsuitenames
+.terraform.lock.hcl
