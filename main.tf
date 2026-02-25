@@ -9,7 +9,7 @@ terraform {
 provider "aci" {
   username = "admin"
   password = "Ananda@0452200490"
-  url      = "https://192.168.1.71"
+  url      = "https://APICNginx"
   insecure = false
 }
 
@@ -19,10 +19,10 @@ module "aci" {
 
   yaml_directories = ["data"]
 
-  manage_access_policies    = true
-  manage_fabric_policies    = true
-  manage_pod_policies       = true
-  manage_node_policies      = true
-  manage_interface_policies = true
+  manage_access_policies    = false
+  manage_fabric_policies    = false
+  manage_pod_policies       = false
+  manage_node_policies      = false
+  manage_interface_policies = false
   manage_tenants            = true
 }
