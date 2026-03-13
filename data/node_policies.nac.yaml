@@ -15,7 +15,7 @@ apic:
       - id: 1101
         pod: 1
         role: leaf
-        serial_number: SN-1-1101
+        serial_number: TEP-1-101
         name: leaf-1101
         oob_address: 10.51.77.94/24
         oob_gateway: 10.51.77.254
@@ -25,7 +25,7 @@ apic:
       - id: 1102
         pod: 1
         role: leaf
-        serial_number: SN-1-1102
+        serial_number: TEP-1-102
         name: leaf-1102
         oob_address: 10.51.77.95/24
         oob_gateway: 10.51.77.254
@@ -35,14 +35,14 @@ apic:
       - id: 2201
         pod: 1
         role: spine
-        serial_number: SN-1-2201
+        serial_number: TEP-1-103
         name: spine-2201
         fabric_policy_group: all-spines
 
       - id: 2202
         pod: 1
         role: spine
-        serial_number: SN-1-2202
+        serial_number: TEP-1-104
         name: spine-2202
         fabric_policy_group: all-spines
 
