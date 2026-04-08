@@ -21,7 +21,9 @@ apic:
           - port: 7
             policy_group: core-routers
           - port: 8
-            policy_group: firewalls
+            policy_group: vpc_to_ftd-4112-01-data-01
+          - port: 9
+            policy_group: vpc_to_ftd-4112-02-data-01
 
       - id: 1102
         interfaces:
@@ -40,4 +42,6 @@ apic:
           - port: 7
             policy_group: core-routers
           - port: 8
-            policy_group: firewalls
+            policy_group: vpc_to_ftd-4112-01-data-01
+          - port: 9
+            policy_group: vpc_to_ftd-4112-02-data-01

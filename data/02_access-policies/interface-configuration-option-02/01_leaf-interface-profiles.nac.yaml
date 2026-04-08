@@ -43,11 +43,17 @@ apic:
               - name: block-1
                 from_port: 7
 
-          - name: firewalls
-            policy_group: firewalls
+          - name: vpc_to_ftd-4112-01-data-01
+            policy_group: vpc_to_ftd-4112-01-data-01
             port_blocks:
               - name: block-1
                 from_port: 8
+
+          - name: vpc_to_ftd-4112-02-data-01
+            policy_group: vpc_to_ftd-4112-02-data-01
+            port_blocks:
+              - name: block-1
+                from_port: 9
 
       - name: leaf-1102
         selectors:
@@ -59,8 +65,8 @@ apic:
               - name: block-2
                 from_port: 2
 
-          - name: hx-prod-fi-b
-            policy_group: hx-prod-fi-b
+          - name: hx-prod-fi-a
+            policy_group: hx-prod-fi-a
             port_blocks:
               - name: block-1
                 from_port: 3
@@ -84,8 +90,14 @@ apic:
               - name: block-1
                 from_port: 7
 
-          - name: firewalls
-            policy_group: firewalls
+          - name: vpc_to_ftd-4112-01-data-01
+            policy_group: vpc_to_ftd-4112-01-data-01
             port_blocks:
               - name: block-1
                 from_port: 8
+
+          - name: vpc_to_ftd-4112-02-data-01
+            policy_group: vpc_to_ftd-4112-02-data-01
+            port_blocks:
+              - name: block-1
+                from_port: 9
