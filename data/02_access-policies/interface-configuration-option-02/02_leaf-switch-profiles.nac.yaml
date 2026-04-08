@@ -1,0 +1,29 @@
+# This file defines the physical switches and maps them (1:1) to the leaf interface profiles
+
+# Once created, this file should only be updated when switches are added or removed from the fabric
+---
+apic:
+  new_interface_configuration: false
+
+# Leaf switch profiles
+  access_policies:  
+    leaf_switch_profiles:
+      - name: leaf-1101
+        selectors:
+          - name: leaf-1101
+            node_blocks:
+              - name: leaf-1101
+                from: 1101
+                to: 1101
+        interface_profiles:
+          - leaf-1101
+
+      - name: leaf-1102
+        selectors:
+          - name: leaf-1102
+            node_blocks:
+              - name: leaf-1102
+                from: 1102
+                to: 1102
+        interface_profiles:
+          - leaf-1102

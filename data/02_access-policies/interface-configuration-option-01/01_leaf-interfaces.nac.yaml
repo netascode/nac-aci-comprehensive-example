@@ -1,0 +1,74 @@
+---
+apic:
+  new_interface_configuration: true
+
+# Nodes
+  node_policies:
+    nodes:
+      - id: 1101
+        role: leaf
+      - id: 1102
+        role: leaf
+
+# Interface configuration
+  interface_policies:
+    nodes:
+      - id: 1101
+        interfaces:
+          - port: 1
+            policy_group: linux-servers
+            shutdown: false
+          - port: 2
+            policy_group: linux-servers
+            shutdown: false
+          - port: 3
+            policy_group: hx-prod-fi-a
+            shutdown: false
+          - port: 4
+            policy_group: hx-prod-fi-a
+            shutdown: false
+          - port: 5
+            policy_group: n7000-a
+            shutdown: false
+          - port: 6
+            policy_group: n7000-b
+            shutdown: false
+          - port: 7
+            policy_group: core-routers
+            shutdown: false
+          - port: 8
+            policy_group: vpc_to_ftd-4112-01-data-01
+            shutdown: false
+          - port: 9
+            policy_group: vpc_to_ftd-4112-02-data-01
+            shutdown: false
+
+      - id: 1102
+        interfaces:
+          - port: 1
+            policy_group: linux-servers
+            shutdown: false
+          - port: 2
+            policy_group: linux-servers
+            shutdown: false
+          - port: 3
+            policy_group: hx-prod-fi-a
+            shutdown: false
+          - port: 4
+            policy_group: hx-prod-fi-a
+            shutdown: false
+          - port: 5
+            policy_group: n7000-a
+            shutdown: false
+          - port: 6
+            policy_group: n7000-b
+            shutdown: false
+          - port: 7
+            policy_group: core-routers
+            shutdown: false
+          - port: 8
+            policy_group: vpc_to_ftd-4112-01-data-01
+            shutdown: false
+          - port: 9
+            policy_group: vpc_to_ftd-4112-02-data-01
+            shutdown: false

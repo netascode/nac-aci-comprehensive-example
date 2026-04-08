@@ -1,0 +1,418 @@
+# The file adds the following to configuration "production-v3":
+
+# - L4-7 device
+# - Service graph policy
+# - Device selection policy
+# - Redirect policy
+# - Redirect Bridge Domain
+# - Updated contract to application-02 to use service graph
+# - External VRF
+# - Internal VRF
+# - Route leaking
+# - ESG for external subnets
+
+---
+apic:
+  tenants:
+    - name: production
+
+# Services
+      services:
+        l4l7_devices:
+          - name: ftd-4112-one-arm-L3-mpod-cluster
+            physical_domain: firewalls
+            context_aware: single-Context
+            type: PHYSICAL
+            function: GoTo
+            service_type: FW
+            trunking: false
+            concrete_devices:
+              - name: ftd-4112-mpod-cluster
+                interfaces:
+                  - name: ftd-4112-01-data-01
+                    pod_id: 1
+                    node_id: 1101
+                    node2_id: 1102
+                    channel: vpc_to_ftd-4112-01-data-01
+                  - name: ftd-4112-02-data-01
+                    pod_id: 1
+                    node_id: 1101
+                    node2_id: 1102
+                    channel: vpc_to_ftd-4112-02-data-01
+            logical_interfaces:
+              - name: data
+                vlan: 16
+                concrete_interfaces:
+                  - device: ftd-4112-mpod-cluster
+                    interface_name: ftd-4112-01-data-01
+                  - device: ftd-4112-mpod-cluster
+                    interface_name: ftd-4112-02-data-01
+
+        redirect_policies:
+          - name: ftd-4112-one-arm-L3-mpod-cluster
+            anycast: true
+            pod_aware: false
+            l3_destinations:
+              - ip: 6.6.6.10
+                mac: 00:00:00:00:00:16
+
+        service_graph_templates:
+          - name: ftd-4112-one-arm-L3-mpod-cluster
+            template_type: FW_ROUTED
+            redirect: true
+            share_encapsulation: false
+            device:
+              tenant: production
+              name: ftd-4112-one-arm-L3-mpod-cluster
+            consumer:
+              direct_connect: false
+            provider:
+              direct_connect: true
+
+        device_selection_policies:
+          - contract: any
+            service_graph_template: ftd-4112-one-arm-L3-mpod-cluster
+            consumer:
+              redirect_policy:
+                name: ftd-4112-one-arm-L3-mpod-cluster
+              logical_interface: data
+              bridge_domain:
+                name: 6.6.6.0_24
+            provider:
+              redirect_policy:
+                name: ftd-4112-one-arm-L3-mpod-cluster
+              logical_interface: data
+              bridge_domain:
+                name: 6.6.6.0_24
+
+# Filters
+      filters:
+        - name: tcp-src-any-to-dst-80
+          entries:
+            - name: src-any-to-dst-80
+              destination_from_port: http
+              destination_to_port: http
+
+        - name: tcp-src-any-to-dst-443
+          entries:
+            - name: src-any-to-dst-443
+              destination_from_port: https
+              destination_to_port: https
+
+# Contracts
+      contracts:
+        - name: permit-to-vlan-100
+          subjects:
+            - name: tcp-entries
+              filters:
+                - filter: tcp-src-any-to-dst-80
+                - filter: tcp-src-any-to-dst-443
+
+        - name: permit-to-vlan-101
+          subjects:
+            - name: tcp-entries
+              filters:
+                - filter: tcp-src-any-to-dst-80
+                - filter: tcp-src-any-to-dst-443
+
+        - name: permit-to-vlan-102
+          subjects:
+            - name: tcp-entries
+              filters:
+                - filter: tcp-src-any-to-dst-80
+                - filter: tcp-src-any-to-dst-443
+
+        - name: permit-to-vlan-103
+          subjects:
+            - name: tcp-entries
+              filters:
+                - filter: tcp-src-any-to-dst-80
+                - filter: tcp-src-any-to-dst-443
+
+        - name: permit-to-application-01
+          subjects:
+            - name: tcp-entries
+              filters:
+                - filter: tcp-src-any-to-dst-80
+                - filter: tcp-src-any-to-dst-443
+
+        - name: permit-to-application-02
+          subjects:
+            - name: redirect
+              service_graph: ftd-4112-one-arm-L3-mpod-cluster
+              filters:
+                - filter: tcp-src-any-to-dst-80
+                - filter: tcp-src-any-to-dst-443
+
+# VRFs
+      vrfs:
+        - name: vrf-01
+          alias: outside-vrf
+          leaked_external_prefixes:
+            - prefix: 0.0.0.0/0
+              destinations:
+                - tenant: production
+                  vrf: vrf-02
+
+        - name: vrf-02
+          alias: inside-vrf
+          leaked_internal_prefixes:
+            - prefix: 10.1.100.0/24
+              public: true
+              destinations:
+                - tenant: production
+                  vrf: vrf-01
+                  public: true
+            - prefix: 10.1.101.0/24
+              public: true
+              destinations:
+                - tenant: production
+                  vrf: vrf-01
+                  public: true
+            - prefix: 10.1.102.0/24
+              public: true
+              destinations:
+                - tenant: production
+                  vrf: vrf-01
+                  public: true
+            - prefix: 10.1.103.0/24
+              public: true
+              destinations:
+                - tenant: production
+                  vrf: vrf-01
+                  public: true
+
+# L3outs
+      l3outs:
+        - name: l3out-to-core-routers
+          vrf: vrf-01
+          domain: production.vrf-01
+          ospf:
+            area: backbone
+            area_type: regular
+            area_cost: 1
+
+          node_profiles:
+            - name: border-leafs
+              nodes:
+                - node_id: 1101
+                  router_id: 101.1.1.1
+                  
+                - node_id: 1102
+                  router_id: 102.1.1.1
+
+              interface_profiles:
+                - name: core-n7000a
+                  interfaces:
+                    - node_id: 1101
+                      pod_id:  1
+                      port: 7
+                      vlan: 201
+                      svi: false
+                      ip: 172.16.101.1/31
+                    - node_id: 1102
+                      pod_id:  1
+                      port: 7
+                      vlan: 201
+                      svi: false
+                      ip: 172.16.101.2/31
+
+                - name: core-n7000b
+                  interfaces:
+                    - node_id: 1101
+                      pod_id:  1
+                      port: 7
+                      vlan: 202
+                      svi: false
+                      ip: 172.16.101.3/31
+                    - node_id: 1102
+                      pod_id:  1
+                      port: 7
+                      vlan: 202
+                      svi: false
+                      ip: 172.16.101.4/31
+
+          external_endpoint_groups:
+            - name: unused-extEPG
+              description: Used to instantiate the L3out
+
+# Bridge Domains
+      bridge_domains:
+        - name: 6.6.6.0_24
+          description: pbr redirect
+          unknown_unicast: proxy
+          vrf: vrf-02
+          subnets:
+            - ip: 6.6.6.1/24
+              public: false
+              shared: false
+              nd_ra_prefix: false
+
+        - name: 10.1.100.0_24
+          vrf: vrf-02
+          subnets:
+            - ip: 10.1.100.1/24
+
+        - name: 10.1.101.0_24
+          vrf: vrf-02
+          subnets:
+            - ip: 10.1.101.1/24
+
+        - name: 10.1.102.0_24
+          vrf: vrf-02
+          subnets:
+            - ip: 10.1.102.1/24
+
+        - name: 10.1.103.0_24
+          vrf: vrf-02
+          subnets:
+            - ip: 10.1.103.1/24
+
+# Application Profiles
+      application_profiles:
+
+# external subnets
+        - name: external-subnets
+          endpoint_security_groups:
+            - name: all-external-subnets
+              vrf: vrf-01
+              shutdown: false
+              ip_external_subnet_selectors:
+                - ip: 0.0.0.0/1
+                  shared: true
+                - ip: 128.0.0.0/1
+                  shared: true
+              contracts:
+                consumers:
+                  - permit-to-vlan-100
+                  - permit-to-vlan-101
+                  - permit-to-vlan-102
+                  - permit-to-vlan-103
+                  - permit-to-application-01
+                  - permit-to-application-02
+
+# vlans and interfaces
+        - name: vlans-and-interfaces
+          endpoint_groups:
+            - name: vlan-100
+              bridge_domain: 10.1.100.0_24
+              physical_domains:
+                - linux-servers
+              static_ports:
+                - node_id: 1101
+                  node2_id: 1102
+                  port: 1
+                  vlan: 100
+
+            - name: vlan-101
+              bridge_domain: 10.1.101.0_24
+              physical_domains:
+                - linux-servers
+              static_ports:
+                - node_id: 1101
+                  node2_id: 1102
+                  port: 1
+                  vlan: 101
+
+            - name: vlan-102
+              bridge_domain: 10.1.102.0_24
+              physical_domains:
+                - linux-servers
+              static_ports:
+                - node_id: 1101
+                  node2_id: 1102
+                  port: 1
+                  vlan: 102
+
+            - name: vlan-103
+              bridge_domain: 10.1.103.0_24
+              physical_domains:
+                - linux-servers
+              static_ports:
+                - node_id: 1101
+                  node2_id: 1102
+                  port: 1
+                  vlan: 103
+
+# vlan security groups
+        - name: vlan-security-groups
+          endpoint_security_groups:
+            - name: vlan-100
+              vrf: vrf-02
+              shutdown: false
+              intra_esg_isolation: false
+              preferred_group: false
+              epg_selectors:
+                - application_profile: vlans-and-interfaces
+                  endpoint_group: vlan-100
+              contracts:
+                providers:
+                  - permit-to-vlan-100
+
+            - name: vlan-101
+              vrf: vrf-02
+              shutdown: false
+              intra_esg_isolation: false
+              preferred_group: false
+              epg_selectors:
+                - application_profile: vlans-and-interfaces
+                  endpoint_group: vlan-101
+              contracts:
+                providers:
+                  - permit-to-vlan-101
+
+            - name: vlan-102
+              vrf: vrf-02
+              shutdown: false
+              intra_esg_isolation: false
+              preferred_group: false
+              epg_selectors:
+                - application_profile: vlans-and-interfaces
+                  endpoint_group: vlan-102
+
+              contracts:
+                providers:
+                  - permit-to-vlan-102
+
+            - name: vlan-103
+              vrf: vrf-02
+              shutdown: false
+              intra_esg_isolation: false
+              preferred_group: false
+              epg_selectors:
+                - application_profile: vlans-and-interfaces
+                  endpoint_group: vlan-103
+              contracts:
+                providers:
+                  - permit-to-vlan-103
+
+# application security groups
+        - name: application-security-groups
+          endpoint_security_groups:
+            - name: application-01
+              vrf: vrf-02
+              shutdown: false
+              intra_esg_isolation: false
+              preferred_group: false
+              ip_subnet_selectors:
+                - value: 10.1.100.10
+                - value: 10.1.101.20
+                - value: 10.1.102.30
+                - value: 10.1.103.40
+              contracts:
+                providers:
+                  - permit-to-application-01
+
+            - name: application-02
+              vrf: vrf-02
+              shutdown: false
+              intra_esg_isolation: false
+              preferred_group: false
+              ip_subnet_selectors:
+                - value: 10.1.100.50
+                - value: 10.1.101.60
+                - value: 10.1.102.70
+                - value: 10.1.103.80
+              contracts:
+                providers:
+                  - permit-to-application-02

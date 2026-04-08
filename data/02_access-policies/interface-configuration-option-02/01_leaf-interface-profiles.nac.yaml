@@ -1,0 +1,103 @@
+# This file defines the leaf interface profiles
+
+# The interface Selector maps Policy Groups (interface settings) to Physical interfaces
+
+---
+apic:
+  new_interface_configuration: false
+
+  access_policies: 
+    leaf_interface_profiles:
+      - name: leaf-1101
+        selectors:
+          - name: linux-servers
+            policy_group: linux-servers
+            port_blocks:
+              - name: block-1
+                from_port: 1
+              - name: block-2
+                from_port: 2
+
+          - name: hx-prod-fi-a
+            policy_group: hx-prod-fi-a
+            port_blocks:
+              - name: block-1
+                from_port: 3
+                to_port: 4
+
+          - name: n7000-a
+            policy_group: n7000-a
+            port_blocks:
+              - name: block-1
+                from_port: 5
+
+          - name: n7000-b
+            policy_group: n7000-b
+            port_blocks:
+              - name: block-1
+                from_port: 6
+
+          - name: core-routers
+            policy_group: core-routers
+            port_blocks:
+              - name: block-1
+                from_port: 7
+
+          - name: vpc_to_ftd-4112-01-data-01
+            policy_group: vpc_to_ftd-4112-01-data-01
+            port_blocks:
+              - name: block-1
+                from_port: 8
+
+          - name: vpc_to_ftd-4112-02-data-01
+            policy_group: vpc_to_ftd-4112-02-data-01
+            port_blocks:
+              - name: block-1
+                from_port: 9
+
+      - name: leaf-1102
+        selectors:
+          - name: linux-servers
+            policy_group: linux-servers
+            port_blocks:
+              - name: block-1
+                from_port: 1
+              - name: block-2
+                from_port: 2
+
+          - name: hx-prod-fi-a
+            policy_group: hx-prod-fi-a
+            port_blocks:
+              - name: block-1
+                from_port: 3
+                to_port: 4
+
+          - name: n7000-a
+            policy_group: n7000-a
+            port_blocks:
+              - name: block-1
+                from_port: 5
+
+          - name: n7000-b
+            policy_group: n7000-b
+            port_blocks:
+              - name: block-1
+                from_port: 6
+
+          - name: core-routers
+            policy_group: core-routers
+            port_blocks:
+              - name: block-1
+                from_port: 7
+
+          - name: vpc_to_ftd-4112-01-data-01
+            policy_group: vpc_to_ftd-4112-01-data-01
+            port_blocks:
+              - name: block-1
+                from_port: 8
+
+          - name: vpc_to_ftd-4112-02-data-01
+            policy_group: vpc_to_ftd-4112-02-data-01
+            port_blocks:
+              - name: block-1
+                from_port: 9
