@@ -1,0 +1,24 @@
+# This file defines Virtual Networking (VMM) integration
+
+---
+apic:
+  fabric_policies:
+    vmware_vmm_domains:
+      - name: vds1-managed
+        access_mode: read-write
+        tag_collection: true
+        vlan_pool: vds1-managed
+        vswitch:
+          cdp_policy: nac-cdp-enabled
+          lldp_policy: nac-lldp-enabled
+          port_channel_policy: nac-mac-pinning
+        credential_policies:
+          - name: credentials
+            username: administrator@vsphere.local
+            password: C1sco123
+        vcenters:
+          - name: vcenter1
+            hostname_ip: 10.10.10.10
+            datacenter: DC
+            credential_policy: credentials
+            dvs_version: 6.5
