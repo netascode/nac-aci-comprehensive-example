@@ -44,9 +44,9 @@ module "aci" {
   # ---------------------------------------------------------------------------
   # Option  | Base Resources | Scaling Impact
   # --------|----------------|-------------------------------------------------
-  # Opt-01  | 207            | +1 resource per additional interface
-  # Opt-02  | 235            | +1 per existing selector / +3 per new selector
-  # Opt-03  | 283            | +3 resources per additional interface
+  # Opt-01  | 22             | +1 resource per additional interface
+  # Opt-02  | 48             | +1 per existing selector / +3 per new selector
+  # Opt-03  | 96             | +3 resources per additional interface
   # ---------------------------------------------------------------------------
 
   # ---------------------------------------------------------------------------
@@ -61,8 +61,8 @@ module "aci" {
   yaml_directories = [
     "data/01_fabric-setup", 
     "data/02_access-policies",
-    "data/02_access-policies/interface-configuration-option-01",
-    # "data/02_access-policies/interface-configuration-option-02",     
+    # "data/02_access-policies/interface-configuration-option-01",
+    "data/02_access-policies/interface-configuration-option-02",     
     # "data/02_access-policies/interface-configuration-option-03",     
     "data/03_virtual-networking"
   ]
