@@ -1,0 +1,113 @@
+# This file defines the AAEPs and the interface Policy Groups (interface templates)
+
+---
+apic:
+  access_policies:
+
+# Global policies - switch port trunk allowed
+    aaeps:
+      - name: core-routers
+        routed_domains:
+          - production.vrf-01
+
+      - name: firewalls
+        physical_domains:
+          - firewalls
+
+      - name: hyperflex
+        vmware_vmm_domains:
+          - vds1-managed
+
+      - name: linux-servers    
+        physical_domains:
+          - linux-servers
+
+# Leaf interface policiy groups
+    leaf_interface_policy_groups:
+
+# Access ports
+      - name: core-routers
+        type: access
+        link_level_policy: link-level-1G-auto
+        cdp_policy: cdp-enabled
+        spanning_tree_policy: bpdu-filter
+        mcp_policy: mcp-enabled
+        aaep: core-routers
+
+      - name: firewalls
+        type: access
+        link_level_policy: link-level-10G-auto
+        cdp_policy: cdp-enabled
+        spanning_tree_policy: bpdu-filter
+        mcp_policy: mcp-enabled
+        aaep: firewalls
+
+      - name: linux-servers
+        type: access
+        link_level_policy: link-level-10G-auto
+        cdp_policy: cdp-enabled
+        spanning_tree_policy: bpdu-filter
+        mcp_policy: mcp-enabled
+        aaep: linux-servers
+
+# Port channels
+      - name: hx-prod-fi-a
+        type: pc
+        link_level_policy: link-level-10G-auto
+        cdp_policy: cdp-enabled
+        lldp_policy: lldp-enabled
+        port_channel_policy: lacp-active
+        spanning_tree_policy: bpdu-filter
+        mcp_policy: mcp-enabled
+        aaep: hyperflex
+
+      - name: hx-prod-fi-b
+        type: pc
+        link_level_policy: link-level-10G-auto
+        cdp_policy: cdp-enabled
+        lldp_policy: lldp-enabled
+        port_channel_policy: lacp-active
+        spanning_tree_policy: bpdu-filter
+        mcp_policy: mcp-enabled
+        aaep: hyperflex
+
+# Virtual port channels
+      - name: n7000-a
+        type: vpc
+        link_level_policy: link-level-10G-auto
+        cdp_policy: cdp-enabled
+        lldp_policy: lldp-enabled
+        port_channel_policy: lacp-active
+        spanning_tree_policy: bpdu-filter
+        mcp_policy: mcp-enabled
+        aaep: core-routers
+
+      - name: n7000-b
+        type: vpc
+        link_level_policy: link-level-10G-auto
+        cdp_policy: cdp-enabled
+        lldp_policy: lldp-enabled
+        port_channel_policy: lacp-active
+        spanning_tree_policy: bpdu-filter
+        mcp_policy: mcp-enabled
+        aaep: core-routers
+
+      - name: vpc_to_ftd-4112-01-data-01
+        type: vpc
+        link_level_policy: link-level-10G-auto
+        cdp_policy: cdp-enabled
+        lldp_policy: lldp-enabled
+        port_channel_policy: lacp-active
+        spanning_tree_policy: bpdu-filter
+        mcp_policy: mcp-enabled
+        aaep: firewalls
+
+      - name: vpc_to_ftd-4112-02-data-01
+        type: vpc
+        link_level_policy: link-level-10G-auto
+        cdp_policy: cdp-enabled
+        lldp_policy: lldp-enabled
+        port_channel_policy: lacp-active
+        spanning_tree_policy: bpdu-filter
+        mcp_policy: mcp-enabled
+        aaep: firewalls

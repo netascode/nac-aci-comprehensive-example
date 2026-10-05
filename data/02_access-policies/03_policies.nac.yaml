@@ -1,0 +1,98 @@
+# This file defines the Interface and Switch Policies (settings)
+
+---
+apic:
+# Node (switch) policies
+  node_policies:
+    vpc_groups:
+      mode: explicit
+      groups:
+        - id: 401
+          name: vpc-1101-1102
+          switch_1: 1101
+          switch_2: 1102
+
+  access_policies:
+  
+# Switch policies
+    switch_policies:
+      forwarding_scale_policies:
+        - name: high-dual-stack
+          profile: high-dual-stack
+        - name: dual-stack
+          profile: dual-stack
+
+    leaf_switch_policy_groups:
+      - name: all-leafs
+        forwarding_scale_policy: dual-stack
+
+    infra_vlan: 3967
+
+# Interface policies
+    mcp:
+      admin_state: true
+      per_vlan: true
+      action: true
+      initial_delay: 180
+      loop_detection: 3
+      frequency_sec: 5
+      key: $3cR3t_K3y
+
+    interface_policies:
+      cdp_policies:
+        - name: cdp-enabled
+          admin_state: true
+        - name: cdp-disabled
+          admin_state: false
+
+      lldp_policies:
+        - name: lldp-enabled
+          admin_rx_state: true
+          admin_tx_state: true
+        - name: lldp-disabled
+          admin_rx_state: false
+          admin_tx_state: false
+
+      link_level_policies:
+        - name: link-level-1G-auto
+          speed: 1G
+          auto: true
+          fec_mode: inherit
+        - name: link-level-10G-auto
+          speed: 10G
+          auto: true
+          fec_mode: inherit
+        - name: link-level-100G-auto
+          speed: 100G
+          auto: true
+          fec_mode: inherit
+
+      port_channel_policies:
+        - name: lacp-active
+          mode: active
+        - name: mac-pinning
+          mode: mac-pin
+
+      port_channel_member_policies:
+        - name: normal
+          rate: normal
+          priority: 32768
+        - name: fast
+          rate: fast
+          priority: 32768
+
+      spanning_tree_policies:
+        - name: bpdu-filter
+          bpdu_filter: true
+        - name: bpdu-guard
+          bpdu_guard: true
+
+      mcp_policies:
+        - name: mcp-enabled
+          admin_state: true
+        - name: mcp-disabled
+          admin_state: false
+
+
+
+

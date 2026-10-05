@@ -1,0 +1,241 @@
+# The file adds the following to the base configuration "production-v1":
+
+# - filters
+# - contracts
+# - network (vlan) security groups
+
+---
+apic:
+  tenants:
+    - name: production
+
+# Filters
+      filters:
+        - name: tcp-src-any-to-dst-80
+          entries:
+            - name: src-any-to-dst-80
+              destination_from_port: http
+              destination_to_port: http
+
+        - name: tcp-src-any-to-dst-443
+          entries:
+            - name: src-any-to-dst-443
+              destination_from_port: https
+              destination_to_port: https
+
+# Contracts
+      contracts:
+        - name: permit-to-vlan-100
+          subjects:
+            - name: tcp-entries
+              filters:
+                - filter: tcp-src-any-to-dst-80
+                - filter: tcp-src-any-to-dst-443
+
+        - name: permit-to-vlan-101
+          subjects:
+            - name: tcp-entries
+              filters:
+                - filter: tcp-src-any-to-dst-80
+                - filter: tcp-src-any-to-dst-443
+
+        - name: permit-to-vlan-102
+          subjects:
+            - name: tcp-entries
+              filters:
+                - filter: tcp-src-any-to-dst-80
+                - filter: tcp-src-any-to-dst-443
+
+        - name: permit-to-vlan-103
+          subjects:
+            - name: tcp-entries
+              filters:
+                - filter: tcp-src-any-to-dst-80
+                - filter: tcp-src-any-to-dst-443
+
+# VRFs
+      vrfs:
+        - name: vrf-01
+
+#L3outs
+      l3outs:
+        - name: l3out-to-core-routers
+          vrf: vrf-01
+          domain: production.vrf-01
+          ospf:
+            area: backbone
+            area_type: regular
+            area_cost: 1
+
+          node_profiles:
+            - name: border-leafs
+              nodes:
+                - node_id: 1101
+                  router_id: 101.1.1.1
+                  
+                - node_id: 1102
+                  router_id: 102.1.1.1
+
+              interface_profiles:
+                - name: core-n7000a
+                  interfaces:
+                    - node_id: 1101
+                      pod_id:  1
+                      port: 7
+                      vlan: 201
+                      svi: false
+                      ip: 172.16.101.1/31
+                    - node_id: 1102
+                      pod_id:  1
+                      port: 7
+                      vlan: 201
+                      svi: false
+                      ip: 172.16.101.2/31
+
+                - name: core-n7000b
+                  interfaces:
+                    - node_id: 1101
+                      pod_id:  1
+                      port: 7
+                      vlan: 202
+                      svi: false
+                      ip: 172.16.101.3/31
+                    - node_id: 1102
+                      pod_id:  1
+                      port: 7
+                      vlan: 202
+                      svi: false
+                      ip: 172.16.101.4/31
+
+          external_endpoint_groups:
+            - name: all-external-subnets
+              subnets:
+                - prefix: 0.0.0.0/1
+                  import_security: true
+                - prefix: 128.0.0.0/1
+                  import_security: true
+              contracts:
+                consumers:
+                  - permit-to-vlan-100
+                  - permit-to-vlan-101
+                  - permit-to-vlan-102
+                  - permit-to-vlan-103
+
+# Bridge Domains
+      bridge_domains:
+        - name: 10.1.100.0_24
+          vrf: vrf-01
+          subnets:
+            - ip: 10.1.100.1/24
+
+        - name: 10.1.101.0_24
+          vrf: vrf-01
+          subnets:
+            - ip: 10.1.101.1/24
+
+        - name: 10.1.102.0_24
+          vrf: vrf-01
+          subnets:
+            - ip: 10.1.102.1/24
+
+        - name: 10.1.103.0_24
+          vrf: vrf-01
+          subnets:
+            - ip: 10.1.103.1/24
+
+# Application Profiles
+      application_profiles:
+
+# vlans and interfaces
+        - name: vlans-and-interfaces
+          endpoint_groups:
+            - name: vlan-100
+              bridge_domain: 10.1.100.0_24
+              physical_domains:
+                - linux-servers
+              static_ports:
+                - node_id: 1101
+                  node2_id: 1102
+                  port: 1
+                  vlan: 100
+
+            - name: vlan-101
+              bridge_domain: 10.1.101.0_24
+              physical_domains:
+                - linux-servers
+              static_ports:
+                - node_id: 1101
+                  node2_id: 1102
+                  port: 1
+                  vlan: 101
+
+            - name: vlan-102
+              bridge_domain: 10.1.102.0_24
+              physical_domains:
+                - linux-servers
+              static_ports:
+                - node_id: 1101
+                  node2_id: 1102
+                  port: 1
+                  vlan: 102
+
+            - name: vlan-103
+              bridge_domain: 10.1.103.0_24
+              physical_domains:
+                - linux-servers
+              static_ports:
+                - node_id: 1101
+                  node2_id: 1102
+                  port: 1
+                  vlan: 103
+
+# vlan security groups
+        - name: vlan-security-groups
+          endpoint_security_groups:
+            - name: vlan-100
+              vrf: vrf-01
+              shutdown: false
+              intra_esg_isolation: false
+              preferred_group: false
+              epg_selectors:
+                - application_profile: vlans-and-interfaces
+                  endpoint_group: vlan-100
+              contracts:
+                providers:
+                  - permit-to-vlan-100
+
+            - name: vlan-101
+              vrf: vrf-01
+              shutdown: false
+              intra_esg_isolation: false
+              preferred_group: false
+              epg_selectors:
+                - application_profile: vlans-and-interfaces
+                  endpoint_group: vlan-101
+              contracts:
+                providers:
+                  - permit-to-vlan-101
+
+            - name: vlan-102
+              vrf: vrf-01
+              shutdown: false
+              intra_esg_isolation: false
+              preferred_group: false
+              epg_selectors:
+                - application_profile: vlans-and-interfaces
+                  endpoint_group: vlan-102
+              contracts:
+                providers:
+                  - permit-to-vlan-102
+
+            - name: vlan-103
+              vrf: vrf-01
+              shutdown: false
+              intra_esg_isolation: false
+              preferred_group: false
+              epg_selectors:
+                - application_profile: vlans-and-interfaces
+                  endpoint_group: vlan-103
+              contracts:
+                providers:
+                  - permit-to-vlan-103

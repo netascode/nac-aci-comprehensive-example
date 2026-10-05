@@ -1,0 +1,43 @@
+# This file defines the VLAN pools
+
+---
+apic:
+  access_policies:
+
+# VLAN pools  
+    vlan_pools:
+      - name: linux-servers
+        allocation: static
+        ranges:
+          - from: 100
+            to: 200
+            allocation: inherit
+
+      - name: firewalls
+        allocation: static
+        ranges:
+          - from: 16
+            to: 16
+            allocation: inherit
+          - from: 300
+            to: 310
+            allocation: inherit
+
+      - name: production.vrf-01
+        allocation: static
+        ranges:
+          - from: 201
+            to: 201
+            description: "L3 peering to external router 1"
+            allocation: static
+          - from: 202
+            to: 202
+            description: "L3 peering to external router 2"
+            allocation: static
+
+      - name: vds1-managed
+        allocation: dynamic
+        ranges:
+          - from: 1000
+            to: 1200
+            allocation: inherit

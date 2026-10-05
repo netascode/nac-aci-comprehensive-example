@@ -1,0 +1,20 @@
+# This file defines Domains and their associated VLAN pool
+
+# When combined with a security domains these settings define which tenants have access to a given VLAN pool
+
+---
+apic:
+  access_policies:
+
+# Physical Domains
+    physical_domains:
+      - name: linux-servers
+        vlan_pool: linux-servers
+
+      - name: firewalls
+        vlan_pool: firewalls
+
+# L3 Domains
+    routed_domains:
+      - name: production.vrf-01
+        vlan_pool: production.vrf-01
